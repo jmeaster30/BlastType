@@ -1,7 +1,7 @@
 using MyLib.Streams;
 using Newtonsoft.Json;
 
-namespace BlastType.Internal.GlyphDefinitionSubtables;
+namespace BlastType.Internal.Reusable;
 
 public enum GlyphClassDef : ushort
 {

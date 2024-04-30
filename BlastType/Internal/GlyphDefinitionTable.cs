@@ -1,4 +1,5 @@
 using BlastType.Internal.GlyphDefinitionSubtables;
+using BlastType.Internal.Reusable;
 using MyLib.Streams;
 using Newtonsoft.Json;
 
@@ -16,10 +17,10 @@ public class GlyphDefinitionTable : IFontTable
     public ushort MarkGlyphSetsDefOffset { get; set; }
     public ushort ItemVarStoreOffset { get; set; }
 
-    public GlyphClassDefinitionTable? GlyphClassDefinitionTable { get; set; }
+    public ClassDefinitionTable? GlyphClassDefinitionTable { get; set; }
     public AttachmentPointListTable? AttachmentPointListTable { get; set; }
     public LigatureCaretListTable? LigatureCaretListTable { get; set; }
-    public MarkAttachClassDefinitionTable? MarkAttachClassDefinitionTable { get; set; }
+    public ClassDefinitionTable? MarkAttachClassDefinitionTable { get; set; }
     public MarkGlyphSetsDefinitionTable? MarkGlyphSetsDefinitionTable { get; set; }
     public ItemVarStoreTable? ItemVarStoreTable { get; set; }
 
@@ -49,7 +50,7 @@ public class GlyphDefinitionTable : IFontTable
         if (gdef.GlyphClassDefOffset != 0)
         {
             stream.Seek(startOfTable + gdef.GlyphClassDefOffset, SeekOrigin.Begin);
-            gdef.GlyphClassDefinitionTable = GlyphClassDefinitionTable.Load(stream);
+            gdef.GlyphClassDefinitionTable = ClassDefinitionTable.Load(stream);
         }
 
         if (gdef.AttachListOffset != 0)
@@ -67,7 +68,7 @@ public class GlyphDefinitionTable : IFontTable
         if (gdef.MarkAttachClassDefOffset != 0)
         {
             stream.Seek(startOfTable + gdef.MarkAttachClassDefOffset, SeekOrigin.Begin);
-            gdef.MarkAttachClassDefinitionTable = MarkAttachClassDefinitionTable.Load(stream);
+            gdef.MarkAttachClassDefinitionTable = ClassDefinitionTable.Load(stream);
         }
         
         if (gdef.MarkGlyphSetsDefOffset != 0)

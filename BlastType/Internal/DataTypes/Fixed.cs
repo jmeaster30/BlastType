@@ -1,27 +1,28 @@
+using MyLib.Bytes;
 using MyLib.Enumerables;
 
 namespace BlastType.Internal.DataTypes;
 
 public class Fixed
 {
-    public int IntegerSize { get; set; }
-    public int FractionalSize { get; set; }
+    private int _integerSize;
+    private int _fractionalSize;
 
-    public int IntegerPart { get; set; }
-    public int FractionalPart { get; set; }
+    private int _integerPart;
+    private int _fractionalPart;
 
     public decimal Value => ToDecimal();
 
     public static Fixed FromBytes(int integerSize, int fractionalSize, byte[] bytes)
     {
         var bitList = bytes.ToBitList();
-        var integerPart = bitList.ReadBits(0, integerSize).AsEnumerable().PadLeft(4, (byte)0);
+        var integerPart = bitList.ReadBitsAt(0, integerSize).AsEnumerable().PadLeft(4, (byte)0);
         //?? Should this function be agnostic to endianness or is this useful?
         if (BitConverter.IsLittleEndian)
         {
             integerPart = integerPart.Reverse();
         }
-        var fractionalPart = bitList.ReadBits(integerSize, fractionalSize).AsEnumerable().PadLeft(4, (byte)0);
+        var fractionalPart = bitList.ReadBitsAt(integerSize, fractionalSize).AsEnumerable().PadLeft(4, (byte)0);
         //?? Should this function be agnostic to endianness or is this useful?
         if (BitConverter.IsLittleEndian)
         {
@@ -29,11 +30,16 @@ public class Fixed
         }
         return new Fixed
         {
-            IntegerSize = integerSize,
-            FractionalSize = fractionalSize,
-            IntegerPart = BitConverter.ToInt32(integerPart.ToArray()),
-            FractionalPart = BitConverter.ToInt32(fractionalPart.ToArray())
+            _integerSize = integerSize,
+            _fractionalSize = fractionalSize,
+            _integerPart = BitConverter.ToInt32(integerPart.ToArray()),
+            _fractionalPart = BitConverter.ToInt32(fractionalPart.ToArray())
         };
+    }
+
+    public byte[] ToBytes()
+    {
+        throw new NotImplementedException();
     }
 
     public override string ToString()
@@ -41,8 +47,8 @@ public class Fixed
         return ToDecimal().ToString();
     }
 
-    public decimal ToDecimal()
+    private decimal ToDecimal()
     {
-        return IntegerPart + FractionalPart / (decimal)(1 << FractionalSize);
+        return _integerPart + _fractionalPart / (decimal)(1 << _fractionalSize);
     }
 }

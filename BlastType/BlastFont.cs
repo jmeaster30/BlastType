@@ -57,12 +57,15 @@ public class BlastFont
             blastFont.TableRecords.Add(TableRecord.Load(fontFile));
         }
 
+        var unimplementedTables = new List<string>();
+
         Console.WriteLine($"NUMBER OF TABLE RECORDS: {blastFont.TableRecords.Count}");
         // some tables require data in other tables so we order by the offset
         foreach (var record in blastFont.TableRecords.OrderBy(x => x.Offset))
         {
+            var tag = Encoding.UTF8.GetString(record.TableTag, 0, record.TableTag.Length);
             Console.WriteLine("-----------");
-            Console.WriteLine($"TableTag '{Encoding.UTF8.GetString(record.TableTag, 0, record.TableTag.Length)}'");
+            Console.WriteLine($"TableTag '{tag}'");
             Console.WriteLine($"Checksum {record.Checksum}");
             Console.WriteLine($"Offset {record.Offset}");
             Console.WriteLine($"Length {record.Length}");
@@ -89,6 +92,7 @@ public class BlastFont
 
             if (table == null)
             { 
+                unimplementedTables.Add(tag);
                 Console.WriteLine("UNIMPLEMENTED");
                 fontFile.Seek(record.Offset, SeekOrigin.Begin);
                 var bytes = fontFile.ReadBytes((int)Math.Min(10, record.Length));
@@ -98,6 +102,12 @@ public class BlastFont
             Console.WriteLine("TABLE::");
             Console.WriteLine(table.ToString());
             blastFont.Tables.Add(table);
+        }
+        
+        Console.WriteLine("List of unimplemented tables in this font: ");
+        foreach (var tableTag in unimplementedTables)
+        {
+            Console.WriteLine($"- {tableTag}");
         }
 
         return blastFont;
