@@ -87,6 +87,7 @@ public class BlastFont
                 "name" => NameTable.Load(fontFile),
                 "OS/2" => Os2.Load(fontFile),
                 "post" => PostTable.Load(fontFile),
+                "kern" => KerningTable.Load(fontFile),
                 _ => null
             };
 
