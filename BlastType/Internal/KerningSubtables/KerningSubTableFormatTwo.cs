@@ -2,7 +2,6 @@ using Newtonsoft.Json;
 
 namespace BlastType.Internal.KerningSubtables;
 
-//130
 public class KerningSubTableFormatTwo : KerningSubTable
 {
     public ushort RowWidth { get; set; }

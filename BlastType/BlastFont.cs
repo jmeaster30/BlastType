@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using BlastType.Internal;
+using BlastType.Internal.NonStandardTables;
 using MyLib.Enumerables;
 using MyLib.Streams;
 
@@ -78,27 +79,23 @@ public class BlastFont
                 "CFF " => CompactFontFormatTable.Load(fontFile),
                 "cmap" => CharacterMapTable.Load(fontFile),
                 "DSIG" => DigitalSignature.Load(fontFile),
+                "FFTM" => FontForgeTimeStamp.Load(fontFile),
                 "GDEF" => GlyphDefinitionTable.Load(fontFile),
                 "GPOS" => GlyphPositioningTable.Load(fontFile),
                 "head" => FontHeader.Load(fontFile),
                 "hhea" => HorizontalHeader.Load(fontFile),
                 "hmtx" => HorizontalMetrics.Load(fontFile, blastFont.Tables),
+                "kern" => KerningTable.Load(fontFile),
                 "maxp" => MaximumProfile.Load(fontFile),
                 "name" => NameTable.Load(fontFile),
                 "OS/2" => Os2.Load(fontFile),
                 "post" => PostTable.Load(fontFile),
-                "kern" => KerningTable.Load(fontFile),
-                _ => null
+                _ => UnknownTable.Load(fontFile, record.Length),
             };
 
-            if (table == null)
+            if (table.Is<UnknownTable>())
             { 
                 unimplementedTables.Add(tag);
-                Console.WriteLine("UNIMPLEMENTED");
-                fontFile.Seek(record.Offset, SeekOrigin.Begin);
-                var bytes = fontFile.ReadBytes((int)Math.Min(10, record.Length));
-                Console.WriteLine(bytes.Select(x => x.ToString("X2")).Join(" "));
-                continue;
             }
             Console.WriteLine("TABLE::");
             Console.WriteLine(table.ToString());
