@@ -4,6 +4,17 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+
+        <Title>BlastType</Title>
+        <Authors>Lily Easterday</Authors>
+        <Description>A library for working with fonts</Description>
+        <Copyright>2024</Copyright>
+        <PackageLicenseUrl>https://github.com/jmeaster30/BlastType/blob/main/LICENSE</PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/jmeaster30/BlastType</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <Version>1.0.0-alpha</Version>
+        <PackageId>Syrency.BlastType</PackageId>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
