@@ -1,6 +1,6 @@
 using MyLib.Streams;
 
-namespace BlastType.Internal.GlyphPositioningSubtables;
+namespace BlastType.Internal.Reusable;
 
 public class ScriptRecord
 {

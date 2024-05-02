@@ -3,6 +3,7 @@ using BlastType.Internal;
 using BlastType.Internal.NonStandardTables;
 using MyLib.Enumerables;
 using MyLib.Streams;
+using Newtonsoft.Json;
 
 namespace BlastType;
 
@@ -82,6 +83,7 @@ public class BlastFont
                 "FFTM" => FontForgeTimeStamp.Load(fontFile),
                 "GDEF" => GlyphDefinitionTable.Load(fontFile),
                 "GPOS" => GlyphPositioningTable.Load(fontFile),
+                "GSUB" => GlyphSubstitutionTable.Load(fontFile),
                 "head" => FontHeader.Load(fontFile),
                 "hhea" => HorizontalHeader.Load(fontFile),
                 "hmtx" => HorizontalMetrics.Load(fontFile, blastFont.Tables),
@@ -97,8 +99,13 @@ public class BlastFont
             { 
                 unimplementedTables.Add(tag);
             }
-            Console.WriteLine("TABLE::");
-            Console.WriteLine(table.ToString());
+
+            if (tag == "GSUB")
+            {
+                Console.WriteLine("TABLE::");
+                Console.WriteLine(table.ToString());
+            }
+
             blastFont.Tables.Add(table);
         }
         
@@ -109,5 +116,10 @@ public class BlastFont
         }
 
         return blastFont;
+    }
+
+    public new string? ToString()
+    {
+        return JsonConvert.SerializeObject(this);
     }
 }

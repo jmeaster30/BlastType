@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace BlastType.Internal;
 
-public class GlyphPositioningTable : IFontTable
+public class GlyphSubstitutionTable : IFontTable
 {
     public ushort MajorVersion { get; set; }
     public ushort MinorVersion { get; set; }
@@ -17,11 +17,11 @@ public class GlyphPositioningTable : IFontTable
     public FeatureListTable? FeatureListTable { get; set; }
     public LookupListTable? LookupListTable { get; set; }
     public FeatureVariationsTable? FeatureVariationsTable { get; set; }
-
-    public static GlyphPositioningTable Load(Stream stream)
+    
+    public static GlyphSubstitutionTable Load(Stream stream)
     {
         var startOfTable = stream.Position;
-        var gpos = new GlyphPositioningTable
+        var gsub = new GlyphSubstitutionTable
         {
             MajorVersion = stream.ReadU16(),
             MinorVersion = stream.ReadU16(),
@@ -30,38 +30,36 @@ public class GlyphPositioningTable : IFontTable
             LookupListOffset = stream.ReadU16(),
         };
 
-        if (gpos.MinorVersion == 1)
+        if (gsub.MinorVersion == 1)
         {
-            gpos.FeatureVariationsOffset = stream.ReadU16();
+            gsub.FeatureVariationsOffset = stream.ReadU16();
         }
-        
-        //Console.WriteLine(JsonConvert.SerializeObject(gpos));
 
-        if (gpos.ScriptListOffset != 0)
+        if (gsub.ScriptListOffset != 0)
         {
-            stream.Seek(startOfTable + gpos.ScriptListOffset, SeekOrigin.Begin);
-            gpos.ScriptListTable = ScriptListTable.Load(stream);
+            stream.Seek(startOfTable + gsub.ScriptListOffset, SeekOrigin.Begin);
+            gsub.ScriptListTable = ScriptListTable.Load(stream);
         }
         
-        if (gpos.FeatureListOffset != 0)
+        if (gsub.FeatureListOffset != 0)
         {
-            stream.Seek(startOfTable + gpos.FeatureListOffset, SeekOrigin.Begin);
-            gpos.FeatureListTable = FeatureListTable.Load(stream);
+            stream.Seek(startOfTable + gsub.FeatureListOffset, SeekOrigin.Begin);
+            gsub.FeatureListTable = FeatureListTable.Load(stream);
         }
         
-        if (gpos.LookupListOffset != 0)
+        if (gsub.LookupListOffset != 0)
         {
-            stream.Seek(startOfTable + gpos.LookupListOffset, SeekOrigin.Begin);
-            gpos.LookupListTable = LookupListTable.Load(stream);
+            stream.Seek(startOfTable + gsub.LookupListOffset, SeekOrigin.Begin);
+            gsub.LookupListTable = LookupListTable.Load(stream);
         }
         
-        if (gpos.FeatureVariationsOffset != 0)
+        if (gsub.FeatureVariationsOffset != 0)
         {
-            stream.Seek(startOfTable + gpos.FeatureVariationsOffset, SeekOrigin.Begin);
-            gpos.FeatureVariationsTable = FeatureVariationsTable.Load(stream);
+            stream.Seek(startOfTable + gsub.FeatureVariationsOffset, SeekOrigin.Begin);
+            gsub.FeatureVariationsTable = FeatureVariationsTable.Load(stream);
         }
         
-        return gpos;
+        return gsub;
     }
     
     public bool Is<T>()

@@ -11,4 +11,8 @@
       <PackageReference Include="Syrency.MyLib" Version="1.0.7-alpha" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Internal\Reusable\LookupSubTables\" />
+    </ItemGroup>
+
 </Project>
